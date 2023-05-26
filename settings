@@ -1,0 +1,10 @@
+{
+    "temp_unit": "C",
+    "fav_cities": [
+        "Saskatoon",
+        "Chicago",
+        "New York"
+    ],
+    "display": "gui",
+    "display-color": "dark"
+}

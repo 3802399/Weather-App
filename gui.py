@@ -4,6 +4,7 @@ from tkinter import messagebox
 import weather
 import settings
 from PIL import Image, ImageTk
+import webbrowser
 
 class SettingsWindow(tk.Frame):
     def __init__(self, close_win, save_win):
@@ -127,6 +128,7 @@ class WeatherWindow(tk.Frame):
 
         # the large text box that will actually show the weather
         self.wthrbox = tk.Text(self.wthr_border, relief="flat")
+        self.wthrbox_current_cursor = 1.0
         self.wthrbox.config(state="disabled")
         self.wthrbox.pack(fill="both", expand=True, padx=1, pady=1)
 
@@ -170,6 +172,7 @@ class WeatherWindow(tk.Frame):
         self.search_btn.grid(row=2, column=4, padx=5, pady=5)
         self.fav_button.grid(row=2, column=11, padx=5, pady=5)
         self.settings_btn.grid(row=2, column=0, padx=5, pady=5)
+        self.map.grid(row=3, column=0)
 
         self.tree_scroll.grid(row=1, column=1, sticky='ns')
 
@@ -204,6 +207,13 @@ class WeatherWindow(tk.Frame):
         self.search_city(city)
         self.city_name.delete(0, "end")
 
+    def add_to_wthrbox(self, text, config):
+        self.wthrbox.insert(self.wthrbox_current_cursor, text, config)
+
+        for letter in text:
+            if letter == "\n":
+                self.wthrbox_current_cursor += 1
+
     def search_city(self, city):
         self.fav_cities = settings.Settings.get_fav_cities()
         self.wthr.get_weather(city)
@@ -226,24 +236,26 @@ class WeatherWindow(tk.Frame):
 
             self.wthrbox.delete(1.0, "end")
 
-            self.wthrbox.insert(4.0, f"{self.wthr.desc}\n", "city_name")
-            self.wthrbox.insert(5.0, f"{self.wthr.temp} °{self.wthr.temp_method}\n", "city_temp")
-            self.wthrbox.insert(6.0, f"{city.title()}, {self.wthr.country}\n\n", "city_desc")
+            self.wthrbox_current_cursor = 4.0
 
-            self.wthrbox.insert(7.0, f"Actual Temperature: {self.wthr.temp} °{self.wthr.temp_method}\n", "weather_data")
-            self.wthrbox.insert(8.0, f"Feels like: {self.wthr.feels_like} °{self.wthr.temp_method}\n", "weather_data")
-            self.wthrbox.insert(9.0, \
-                f"Range: {self.wthr.temp_range[0]} to {self.wthr.temp_range[1]} °{self.wthr.temp_method}\n\n", "weather_data")
+            self.add_to_wthrbox(f"{self.wthr.desc}\n", "city_name")
+            self.add_to_wthrbox(f"{self.wthr.temp} °{self.wthr.temp_method}\n", "city_temp")
+            self.add_to_wthrbox(f"{city.title()}, {self.wthr.country}\n\n", "city_desc")
 
-            self.wthrbox.insert(11.0, f"Humidity: {self.wthr.humidity} %\n", "weather_data")
-            self.wthrbox.insert(13.0, f"Visibility: {self.wthr.visibility} km\n", "weather_data")
+            self.add_to_wthrbox(f"Actual Temperature: {self.wthr.temp} °{self.wthr.temp_method}\n", "weather_data")
+            self.add_to_wthrbox(f"Feels like: {self.wthr.feels_like} °{self.wthr.temp_method}\n", "weather_data")
+            self.add_to_wthrbox(f"Range: {self.wthr.temp_range[0]} to {self.wthr.temp_range[1]} °{self.wthr.temp_method}\n\n", "weather_data")
 
-            self.wthrbox.insert(15.0, f"Wind speed: {self.wthr.wind_speed} km/h {self.wthr.wind_direction}\n\n", "weather_data")
+            self.add_to_wthrbox(f"Humidity: {self.wthr.humidity} %\n", "weather_data")
+            self.add_to_wthrbox(f"Visibility: {self.wthr.visibility} km\n", "weather_data")
+            self.add_to_wthrbox(f"Pressure: {self.wthr.pressure} hPa\n", "weather_data")
 
-            self.wthrbox.insert(17.0, f"Last updated (local time): {self.wthr.current_time['hour']}:{self.wthr.current_time['minute']}:{self.wthr.current_time['second']} {['AM', 'PM'][self.wthr.current_time['hour_type']]}\n\n", "weather_data")
+            self.add_to_wthrbox(f"Wind speed: {self.wthr.wind_speed} km/h {self.wthr.wind_direction}\n\n", "weather_data")
 
-            self.wthrbox.insert(19.0, f"Sunrise: {self.wthr.sunrise['hour']}:{self.wthr.sunrise['minute']}:{self.wthr.sunrise['second']} {['AM', 'PM'][self.wthr.sunrise['hour_type']]}\n", "weather_data")
-            self.wthrbox.insert(20.0, f"Sunset: {self.wthr.sunset['hour']}:{self.wthr.sunset['minute']}:{self.wthr.sunset['second']} {['AM', 'PM'][self.wthr.sunset['hour_type']]}\n", "weather_data")
+            self.add_to_wthrbox(f"Last updated (local time): {self.wthr.current_time['hour']}:{self.wthr.current_time['minute']}:{self.wthr.current_time['second']} {['AM', 'PM'][self.wthr.current_time['hour_type']]}\n\n", "weather_data")
+
+            self.add_to_wthrbox(f"Sunrise: {self.wthr.sunrise['hour']}:{self.wthr.sunrise['minute']}:{self.wthr.sunrise['second']} {['AM', 'PM'][self.wthr.sunrise['hour_type']]}\n", "weather_data")
+            self.add_to_wthrbox(f"Sunset: {self.wthr.sunset['hour']}:{self.wthr.sunset['minute']}:{self.wthr.sunset['second']} {['AM', 'PM'][self.wthr.sunset['hour_type']]}\n", "weather_data")
 
             self.wthrbox.config(state="disabled")
 

@@ -105,14 +105,21 @@ Day 15 - May 25, 2023 (1/2 hr)
 
 30 min - write code so the background changes with ttk theme changes (light -> dark and vice versa) - previously background did not change
 
-Day 16 - May 26, 2023 (1 hr)
+Day 16 - May 26, 2023 (1/2 hr)
 
-60 min - find out something happened and half my work's gone - try to rewrite some code because I was stupid enough not to back it up
+5 min - show seconds to local time last updated, sunrise, and sunset
+25 min - refactored settings code to be better and fix bugs
 
-Day 17 - May 27, 2023 (2.5 hrs)
+Day 17 - May 29, 2023 (1 hr)
 
-150 min - rewrite some of the corrupted code, not done yet
+20 min - get code reviewed by neighbour (determined by seating) and get no improvement ideas
+40 min - review code of partner and help them out
 
-Day 18 - May 28, 2023 (1 hr)
+Day 18 - May 29, 2023 (1 hr - continuation)
 
-60 min - finish rewriting lost code and backed up to GitHub
+30 min - change/add/delete code to make adding different data to GUI weather display easier
+10 min - rewrite code that gets wind direction to make it more modular and easier to understand
+5 min - fix bug that raises an error if the favourite temp unit is Kelvin (there is a variable that is loaded inside an if-statement with the conditions
+          being that the favourite temp unit is C or F, but that variable is used later outside of that if-statement without being initialized if the favourite
+          temp unit is K)
+15 min - look for module to open a map in a web browser to show location of city - so far no success

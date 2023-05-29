@@ -63,6 +63,7 @@ class Weather:
         self.wind_deg = 0
         self.wind_speed = 0
         self.visibility = 0
+        self.pressure = 0
 
         self.icon = 0
 
@@ -100,6 +101,8 @@ class Weather:
             self.msg = resp["message"]
             return
 
+        print(resp)
+
         # get basic description and weather icon
         self.desc = resp["weather"][0]["description"]
         self.icon = resp["weather"][0]["icon"]
@@ -129,8 +132,14 @@ class Weather:
         # humidity + visibility
         self.humidity = resp["main"]["humidity"]
         self.visibility = resp["visibility"]
+        self.pressure = resp["main"]["pressure"]
+
+        # get location
+        self.coords = resp['coord']
 
         # wind speed stuff
+        conv = Conversion.convert_and_round
+
         self.wind_speed = conv(Conversion.ms_to_kmh, resp["wind"]["speed"], 1)
         self.wind_deg = resp["wind"]["deg"]
         self.wind_direction = f"{self.wind_deg}"
@@ -249,6 +258,7 @@ Range: from {self.temp_range[0]} to {self.temp_range[1]} {self.temp_method}
 
 Humidity: {self.humidity} %
 Visibility: {self.visibility} km
+Pressure: {self.pressure} hPa
 
 Wind speed: {self.wind_speed} km/h {self.wind_direction}
 

@@ -5,6 +5,6 @@
         "Chicago",
         "New York"
     ],
-    "display": "gui",
+    "display": "cli",
     "display-color": "dark"
 }

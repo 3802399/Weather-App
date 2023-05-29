@@ -100,6 +100,9 @@ class WeatherWindow(tk.Frame):
         self.current_city = ""
         self.code = 0
 
+        # instance to get weather data from
+        self.wthr = weather.Weather(self.api)
+
         # text to display on the favourite/unfavourite button, based on whether the city is favourited or not
         self.heart_full = "Unfavourite"
         self.heart_empty = "Favourite"
@@ -202,16 +205,15 @@ class WeatherWindow(tk.Frame):
         self.city_name.delete(0, "end")
 
     def search_city(self, city):
-        wthr = weather.Weather(city, self.api)
         self.fav_cities = settings.Settings.get_fav_cities()
-        wthr.find_weather()
-        city = wthr.city
+        self.wthr.get_weather(city)
+        city = self.wthr.city
 
-        if wthr.code != 200:
+        if self.wthr.code != 200:
             # inform user of error
             self.wthrbox.config(state="normal")
             self.wthrbox.delete(1.0, "end")
-            self.wthrbox.insert(1.0, wthr.msg, "error")
+            self.wthrbox.insert(1.0, self.wthr.msg, "error")
             self.wthrbox.config(state="disabled")
 
             self.fav_button.config(text=self.heart_empty)
@@ -224,30 +226,31 @@ class WeatherWindow(tk.Frame):
 
             self.wthrbox.delete(1.0, "end")
 
-            self.wthrbox.insert(4.0, f"{wthr.desc}\n", "city_name")
-            self.wthrbox.insert(5.0, f"{wthr.temp} °{wthr.temp_method}\n", "city_temp")
-            self.wthrbox.insert(6.0, f"{city.title()}, {wthr.country}\n\n", "city_desc")
+            self.wthrbox.insert(4.0, f"{self.wthr.desc}\n", "city_name")
+            self.wthrbox.insert(5.0, f"{self.wthr.temp} °{self.wthr.temp_method}\n", "city_temp")
+            self.wthrbox.insert(6.0, f"{city.title()}, {self.wthr.country}\n\n", "city_desc")
 
-            self.wthrbox.insert(7.0, f"Actual Temperature: {wthr.temp} °{wthr.temp_method}\n", "weather_data")
-            self.wthrbox.insert(8.0, f"Feels like: {wthr.feels_like} °{wthr.temp_method}\n", "weather_data")
-            self.wthrbox.insert(9.0, f"Range: {wthr.temp_range[0]} to {wthr.temp_range[1]} °{wthr.temp_method}\n\n", "weather_data")
+            self.wthrbox.insert(7.0, f"Actual Temperature: {self.wthr.temp} °{self.wthr.temp_method}\n", "weather_data")
+            self.wthrbox.insert(8.0, f"Feels like: {self.wthr.feels_like} °{self.wthr.temp_method}\n", "weather_data")
+            self.wthrbox.insert(9.0, \
+                f"Range: {self.wthr.temp_range[0]} to {self.wthr.temp_range[1]} °{self.wthr.temp_method}\n\n", "weather_data")
 
-            self.wthrbox.insert(11.0, f"Humidity: {wthr.humidity} %\n", "weather_data")
-            self.wthrbox.insert(13.0, f"Visibility: {wthr.visibility} km\n", "weather_data")
+            self.wthrbox.insert(11.0, f"Humidity: {self.wthr.humidity} %\n", "weather_data")
+            self.wthrbox.insert(13.0, f"Visibility: {self.wthr.visibility} km\n", "weather_data")
 
-            self.wthrbox.insert(15.0, f"Wind speed: {wthr.wind_speed} km/h {wthr.wind_direction}\n\n", "weather_data")
+            self.wthrbox.insert(15.0, f"Wind speed: {self.wthr.wind_speed} km/h {self.wthr.wind_direction}\n\n", "weather_data")
 
-            self.wthrbox.insert(17.0, f"Last updated (local time): {wthr.current_time['hour']}:{wthr.current_time['minute']} {['AM', 'PM'][wthr.current_time['hour_type']]}\n\n", "weather_data")
+            self.wthrbox.insert(17.0, f"Last updated (local time): {self.wthr.current_time['hour']}:{self.wthr.current_time['minute']}:{self.wthr.current_time['second']} {['AM', 'PM'][self.wthr.current_time['hour_type']]}\n\n", "weather_data")
 
-            self.wthrbox.insert(19.0, f"Sunrise: {wthr.sunrise['hour']}:{wthr.sunrise['minute']} {['AM', 'PM'][wthr.sunrise['hour_type']]}\n", "weather_data")
-            self.wthrbox.insert(20.0, f"Sunset: {wthr.sunset['hour']}:{wthr.sunset['minute']} {['AM', 'PM'][wthr.sunset['hour_type']]}\n", "weather_data")
+            self.wthrbox.insert(19.0, f"Sunrise: {self.wthr.sunrise['hour']}:{self.wthr.sunrise['minute']}:{self.wthr.sunrise['second']} {['AM', 'PM'][self.wthr.sunrise['hour_type']]}\n", "weather_data")
+            self.wthrbox.insert(20.0, f"Sunset: {self.wthr.sunset['hour']}:{self.wthr.sunset['minute']}:{self.wthr.sunset['second']} {['AM', 'PM'][self.wthr.sunset['hour_type']]}\n", "weather_data")
 
             self.wthrbox.config(state="disabled")
 
             self.fav_button.config(state="normal")
 
             # change weather icon
-            self.add_image_with_name(wthr.icon)
+            self.add_image_with_name(self.wthr.icon)
 
             # change favourite/unfavourite depending on whether it has been favourited or not
             if city in self.fav_cities:
@@ -256,7 +259,7 @@ class WeatherWindow(tk.Frame):
                 self.fav_button.config(text=self.heart_empty)
 
         self.current_city = city
-        self.code = wthr.code
+        self.code = self.wthr.code
 
     def fav_this_city(self):
         city = self.current_city

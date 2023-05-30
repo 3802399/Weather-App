@@ -123,3 +123,15 @@ Day 18 - May 29, 2023 (1 hr - continuation)
           being that the favourite temp unit is C or F, but that variable is used later outside of that if-statement without being initialized if the favourite
           temp unit is K)
 15 min - look for module to open a map in a web browser to show location of city - so far no success
+
+Day 19 - May 30, 2023 (1 hr)
+
+30 min - add webbrowser module to open Google Maps of city
+30 min - add map using tkintermapview to app for choice
+
+Day 20 - May 30, 2023 (1 hr continued)
+
+20 min - add map to settings
+25 min - fix bugs of that (there were lots of minor ones)
+5 min - add button to go back from map frame
+10 min - add marker/pins to map view in app

@@ -125,6 +125,21 @@ class Settings:
         modes = ["dark", "light"]
         Settings.toggle_mode("display-color", modes)
 
+    # choice of map (view it on the web using Google Maps or in the app itself using some map module)
+    @staticmethod
+    def get_map():
+        return Settings.get_data()["map"]
+
+    @staticmethod
+    def save_map(map):
+        if map in ["web", "app"]:
+            Settings.save_data_param("map", map)
+
+    @staticmethod
+    def toggle_map():
+        modes = ["web", "app"]
+        Settings.toggle_mode("map", modes)
+
 class SettingsCLI:
     def __init__(self):
         print("SETTINGS\n\n")
@@ -134,6 +149,7 @@ class SettingsCLI:
         self.remove_fav_cities()
         self.change_display()
         self.change_display_color()
+        self.change_map()
 
         print("\n")
 
@@ -189,6 +205,9 @@ class SettingsCLI:
 
     def change_display_color(self):
         self.change_toggle(["light", "dark"], "Enter display color (light, dark) or hit enter to continue: ", "display-color")
+
+    def change_map(self):
+        self.change_toggle(["web", "app"], "Enter how you want to view a map (web, app) or hit enter to continue: ", "map")
 
 if __name__ == "__main__":
     SettingsCLI()

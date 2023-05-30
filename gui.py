@@ -5,6 +5,29 @@ import weather
 import settings
 from PIL import Image, ImageTk
 import webbrowser
+import tkintermapview
+
+class MapWindow(tk.Frame):
+    def __init__(self, close_win):
+        tk.Frame.__init__(self)
+
+        self.close_win = close_win
+        self.marker = None
+
+        # map
+        self.map = tkintermapview.TkinterMapView(self, width=800, height=600, corner_radius=0)
+        self.map.grid(row=0, column=0, columnspan=5, padx=5, pady=5, sticky='nsew')
+
+        # go back button
+        self.back = ttk.Button(self, text="Back", command=self.close_win)
+        self.back.grid(row=1, column=0, padx=5, pady=5)
+
+    def change_location(self, city, country):
+        # delete any current marker
+        if self.marker:
+            self.marker.delete()
+        # change the map to the current city, and show a red marker/pin on it
+        self.marker = self.map.set_address(f"{city},{country}", marker=True)
 
 class SettingsWindow(tk.Frame):
     def __init__(self, close_win, save_win):
@@ -14,7 +37,8 @@ class SettingsWindow(tk.Frame):
 
         # widget to select temp unit
         self.temp_name = ttk.Label(self, text="Temp Units")
-        self.temp_selected = tk.StringVar()
+        current_temp = settings.Settings.get_temp_unit()
+        self.temp_selected = tk.StringVar(value=current_temp)
 
         temps = ("C", "F", "K")
 
@@ -25,11 +49,12 @@ class SettingsWindow(tk.Frame):
             self.temp_btns.append(r)
 
         # set the radiobuttons to what is set in settings
-        self.temp_selected.set(settings.Settings.get_temp_unit())
+        self.temp_selected.set(current_temp)
 
         # widget to select display mode
         self.display_name = ttk.Label(self, text="Display")
-        self.display_selected = tk.StringVar(value=settings.Settings.get_display_mode())
+        current_display = settings.Settings.get_display_mode()
+        self.display_selected = tk.StringVar(value=current_display)
 
         displays = ("gui", "cli")
 
@@ -40,11 +65,12 @@ class SettingsWindow(tk.Frame):
             self.display_btns.append(r)
 
         # set the radiobuttons to what is set in settings
-        self.display_selected.set(settings.Settings.get_display_mode())
+        self.display_selected.set(current_display)
 
         # widget to select dark/light mode
         self.color_name = ttk.Label(self, text="Color Mode")
-        self.color_selected = tk.StringVar(value=settings.Settings.get_display_color())
+        current_color = settings.Settings.get_display_color()
+        self.color_selected = tk.StringVar(value=current_color)
 
         colors = ("light", "dark")
 
@@ -55,7 +81,23 @@ class SettingsWindow(tk.Frame):
             self.color_btns.append(r)
 
         # set the radiobuttons to what is set in settings
-        self.color_selected.set(settings.Settings.get_display_color())
+        self.color_selected.set(current_color)
+
+        # widget to change map view
+        self.map_name = ttk.Label(self, text="Map Display")
+        current_map = settings.Settings.get_map()
+        self.map_selected = tk.StringVar(value=current_map)
+
+        views = ("app", "web")
+
+        self.view_btns = []
+
+        for view in views:
+            r = ttk.Radiobutton(self, text=view, value=view, variable=self.map_selected)
+            self.view_btns.append(r)
+
+        # set the radiobuttons to what is set in settings
+        self.map_selected.set(current_map)
 
         # widget to close window
         self.close_win = close_win
@@ -68,8 +110,8 @@ class SettingsWindow(tk.Frame):
         row = 0
         index = 0 # to keep track of which setting we are one (temp, display, or color)
 
-        names = [self.temp_name, self.display_name, self.color_name]
-        radio_buttons = [self.temp_btns, self.display_btns, self.color_btns]
+        names = [self.temp_name, self.display_name, self.color_name, self.map_name]
+        radio_buttons = [self.temp_btns, self.display_btns, self.color_btns, self.view_btns]
 
         for btns in radio_buttons:
             # add name to column 0
@@ -91,15 +133,17 @@ class SettingsWindow(tk.Frame):
         self.save_btn.grid(row=row, column=1, padx=5, pady=5)
 
     def get_settings(self):
-        return {"temp":self.temp_selected.get(), "display":self.display_selected.get(), "color":self.color_selected.get()}
+        return {"temp":self.temp_selected.get(), "display":self.display_selected.get(), "color":self.color_selected.get(), "map":self.map_selected.get()}
 
 class WeatherWindow(tk.Frame):
-    def __init__(self, fav_cities, api, access_settings):
+    def __init__(self, fav_cities, api, access_settings, access_map):
         tk.Frame.__init__(self)
 
         self.api = api
         self.current_city = ""
         self.code = 0
+
+        self.access_map = access_map
 
         # instance to get weather data from
         self.wthr = weather.Weather(self.api)
@@ -164,17 +208,32 @@ class WeatherWindow(tk.Frame):
         self.settings_btn = ttk.Button(self, text="Settings", command=access_settings)
         self.settings_app = None
 
-        # finally grid the widgets
-        self.tree.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
-        self.wthr_border.grid(row=1, column=2, columnspan=10, padx=5, pady=5, sticky='nsew')
-        self.enter_city_label.grid(row=2, column=2, padx=5, pady=5)
-        self.city_name.grid(row=2, column=3, padx=5, pady=5)
-        self.search_btn.grid(row=2, column=4, padx=5, pady=5)
-        self.fav_button.grid(row=2, column=11, padx=5, pady=5)
-        self.settings_btn.grid(row=2, column=0, padx=5, pady=5)
-        self.map.grid(row=3, column=0)
+        # add a button to open the map in a web browser
+        self.browser_btn = ttk.Button(self, text="Open Map", command=self.open_map)
 
-        self.tree_scroll.grid(row=1, column=1, sticky='ns')
+        # finally grid the widgets
+        self.tree.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
+        self.wthr_border.grid(row=1, column=3, columnspan=10, padx=5, pady=5, sticky='nsew')
+        self.enter_city_label.grid(row=2, column=3, padx=5, pady=5)
+        self.city_name.grid(row=2, column=4, padx=5, pady=5)
+        self.search_btn.grid(row=2, column=5, padx=5, pady=5)
+        self.fav_button.grid(row=2, column=12, padx=5, pady=5)
+        self.settings_btn.grid(row=2, column=0, padx=5, pady=5)
+        self.browser_btn.grid(row=2, column=1)
+
+        self.tree_scroll.grid(row=1, column=2, sticky='ns')
+
+    def open_map(self):
+        current_city = self.wthr.city
+        country = self.wthr.country
+
+        if current_city:
+            preferred_map = settings.Settings.get_map()
+
+            if preferred_map == "web":
+                webbrowser.get().open(f"https://www.google.com/maps/place/{current_city},{country}")
+            else:
+                self.access_map(current_city, country)
 
     def item_selected_event(self, event):
         selected = self.tree.focus()
@@ -207,6 +266,9 @@ class WeatherWindow(tk.Frame):
         self.search_city(city)
         self.city_name.delete(0, "end")
 
+    # instead of adding position numbers when adding text to the wthrbox, we can
+    # add it here to make the code better and not have to reset the position numbers every time
+    # i decide we should display more data
     def add_to_wthrbox(self, text, config):
         self.wthrbox.insert(self.wthrbox_current_cursor, text, config)
 
@@ -238,6 +300,7 @@ class WeatherWindow(tk.Frame):
 
             self.wthrbox_current_cursor = 4.0
 
+            # show the data
             self.add_to_wthrbox(f"{self.wthr.desc}\n", "city_name")
             self.add_to_wthrbox(f"{self.wthr.temp} °{self.wthr.temp_method}\n", "city_temp")
             self.add_to_wthrbox(f"{city.title()}, {self.wthr.country}\n\n", "city_desc")
@@ -320,8 +383,9 @@ class GUIMain(tk.Tk):
         self.toggle_display_color(mode)
 
         # frames
-        self.weather_frame = WeatherWindow(fav_cities, api, self.access_settings)
-        self.settings_frame = SettingsWindow(self.close_win, self.save_win)
+        self.weather_frame = WeatherWindow(fav_cities, api, self.access_settings, self.access_map)
+        self.settings_frame = SettingsWindow(lambda: self.close_win(self.settings_frame), self.save_win)
+        self.map_frame = MapWindow(lambda: self.close_win(self.map_frame))
 
         self.weather_frame.pack()
 
@@ -329,9 +393,14 @@ class GUIMain(tk.Tk):
         self.weather_frame.pack_forget()
         self.settings_frame.pack()
 
-    # close settings window
-    def close_win(self):
-        self.settings_frame.pack_forget()
+    def access_map(self, city, country):
+        self.weather_frame.pack_forget()
+        self.map_frame.change_location(city, country)
+        self.map_frame.pack()
+
+    # close frame
+    def close_win(self, frame):
+        frame.pack_forget()
         self.weather_frame.pack()
 
     # save settings and close settings window
@@ -343,12 +412,13 @@ class GUIMain(tk.Tk):
         settings.Settings.save_temp_unit(saved_settings["temp"])
         settings.Settings.save_display_mode(saved_settings["display"])
         settings.Settings.save_display_color(saved_settings["color"])
+        settings.Settings.save_map(saved_settings["map"])
 
         # TODO: add verification to check if color changed or not, otherwise error will occur
         if current_color != saved_settings["color"]:
             self.toggle_display_color(saved_settings["color"])
 
-        self.close_win()
+        self.close_win(self.settings_frame)
 
     # toggle display color
     def toggle_display_color(self, color):

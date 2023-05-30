@@ -6,5 +6,6 @@
         "New York"
     ],
     "display": "gui",
-    "display-color": "dark"
+    "display-color": "dark",
+    "map": "app"
 }

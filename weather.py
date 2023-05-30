@@ -101,8 +101,6 @@ class Weather:
             self.msg = resp["message"]
             return
 
-        print(resp)
-
         # get basic description and weather icon
         self.desc = resp["weather"][0]["description"]
         self.icon = resp["weather"][0]["icon"]

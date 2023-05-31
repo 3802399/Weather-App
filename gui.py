@@ -104,7 +104,7 @@ class SettingsWindow(tk.Frame):
         self.save_win = save_win
 
         self.close_btn = ttk.Button(self, text="Close", command=self.close_win)
-        self.save_btn = ttk.Button(self, text="Save", command=self.save_win)
+        self.save_btn = ttk.Button(self, text="Save", command=self.save_win, style='Accent.TButton')
 
         # grid widgets
         row = 0
@@ -211,15 +211,15 @@ class WeatherWindow(tk.Frame):
         # add a button to open the map in a web browser
         self.browser_btn = ttk.Button(self, text="Open Map", command=self.open_map)
 
-        # finally grid the widgets
+        # grid the widgets
         self.tree.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
         self.wthr_border.grid(row=1, column=3, columnspan=10, padx=5, pady=5, sticky='nsew')
-        self.enter_city_label.grid(row=2, column=3, padx=5, pady=5)
-        self.city_name.grid(row=2, column=4, padx=5, pady=5)
-        self.search_btn.grid(row=2, column=5, padx=5, pady=5)
-        self.fav_button.grid(row=2, column=12, padx=5, pady=5)
-        self.settings_btn.grid(row=2, column=0, padx=5, pady=5)
-        self.browser_btn.grid(row=2, column=1)
+        self.enter_city_label.grid(row=2, column=3, padx=5, pady=5, sticky='nsew')
+        self.city_name.grid(row=2, column=4, padx=5, pady=5, sticky='nsew')
+        self.search_btn.grid(row=2, column=5, padx=5, pady=5, sticky='nsew')
+        self.fav_button.grid(row=2, column=12, padx=5, pady=5, sticky='nsew')
+        self.settings_btn.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
+        self.browser_btn.grid(row=2, column=1, padx=5, pady=5, sticky='nsew')
 
         self.tree_scroll.grid(row=1, column=2, sticky='ns')
 
@@ -234,6 +234,8 @@ class WeatherWindow(tk.Frame):
                 webbrowser.get().open(f"https://www.google.com/maps/place/{current_city},{country}")
             else:
                 self.access_map(current_city, country)
+        else:
+            messagebox.showerror("Error", "Cannot view map of city not selected")
 
     def item_selected_event(self, event):
         selected = self.tree.focus()
@@ -387,7 +389,7 @@ class GUIMain(tk.Tk):
         self.settings_frame = SettingsWindow(lambda: self.close_win(self.settings_frame), self.save_win)
         self.map_frame = MapWindow(lambda: self.close_win(self.map_frame))
 
-        self.weather_frame.pack()
+        self.weather_frame.pack(expand='yes')
 
     def access_settings(self):
         self.weather_frame.pack_forget()
@@ -411,12 +413,14 @@ class GUIMain(tk.Tk):
 
         settings.Settings.save_temp_unit(saved_settings["temp"])
         settings.Settings.save_display_mode(saved_settings["display"])
-        settings.Settings.save_display_color(saved_settings["color"])
         settings.Settings.save_map(saved_settings["map"])
+        # we intentionally save color later - because if the color isn't available, then we should not save that color to settings
 
         # TODO: add verification to check if color changed or not, otherwise error will occur
         if current_color != saved_settings["color"]:
-            self.toggle_display_color(saved_settings["color"])
+            if self.toggle_display_color(saved_settings["color"]):
+                # if color is available save it
+                settings.Settings.save_display_color(saved_settings["color"])
 
         self.close_win(self.settings_frame)
 
@@ -427,27 +431,37 @@ class GUIMain(tk.Tk):
         # loads the ttk theme (in this func) first, we need to make sure this function doesn't call those tk.Frames before
         # they are initialized
         just_loaded = False
+        success = False
 
         if color in ["light", "dark"]:
             if color not in self.colors_loaded:
-                self.tk.call('source', f'forest-theme/forest-{color}.tcl')
-                self.colors_loaded.append(color)
+                try:
+                    self.tk.call('source', f'forest-theme/forest-{color}.tcl')
+                    self.colors_loaded.append(color)
+                except:
+                    print(f"Error: cannot find forest-{color} theme, which should have been included in the download.")
+                    success = False
 
                 just_loaded = True
 
-            ttk.Style().theme_use(f'forest-{color}')
+            if color in self.colors_loaded:
+                ttk.Style().theme_use(f'forest-{color}')
 
-            # we need to manually change the background to black - otherwise the widgets will be dark mode but not the background
-            if color == "dark" and not just_loaded:
-                self.weather_frame.configure(background=self.bg_dark)
-                self.settings_frame.configure(background=self.bg_dark)
+                # we need to manually change the background to black - otherwise the widgets will be dark mode but not the background
+                if color == "dark" and not just_loaded:
+                    self.weather_frame.configure(background=self.bg_dark)
+                    self.settings_frame.configure(background=self.bg_dark)
 
-                # manually change the color of the weather box otherwise it will not change
-                self.weather_frame.wthrbox.configure(background=self.bg_dark)
-                self.weather_frame.wthrbox.configure(foreground=self.fg_dark)
-            elif color == "light" and not just_loaded:
-                self.weather_frame.configure(background=self.bg_light)
-                self.settings_frame.configure(background=self.bg_light)
+                    # manually change the color of the weather box otherwise it will not change
+                    self.weather_frame.wthrbox.configure(background=self.bg_dark)
+                    self.weather_frame.wthrbox.configure(foreground=self.fg_dark)
+                elif color == "light" and not just_loaded:
+                    self.weather_frame.configure(background=self.bg_light)
+                    self.settings_frame.configure(background=self.bg_light)
 
-                self.weather_frame.wthrbox.configure(background=self.bg_light)
-                self.weather_frame.wthrbox.configure(foreground=self.fg_light)
+                    self.weather_frame.wthrbox.configure(background=self.bg_light)
+                    self.weather_frame.wthrbox.configure(foreground=self.fg_light)
+
+                success = True
+
+        return success

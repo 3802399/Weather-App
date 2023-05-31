@@ -135,3 +135,11 @@ Day 20 - May 30, 2023 (1 hr continued)
 25 min - fix bugs of that (there were lots of minor ones)
 5 min - add button to go back from map frame
 10 min - add marker/pins to map view in app
+
+Day 21 - May 31, 2023 (1 hr)
+
+15 min - add expand to to frame.pack() so frame will go to center of available space in window
+5 min - add green color to Save button in settings frame, show user error if they try to access map when unavailable
+15 min - add checks to the beginning of the application to ensure that either the files exist and are valid, or we must exit
+15 min - add checks to make sure the themes we want to load are available (found out I was missing some files this way, actually)
+10 min - fix bugs relating to changing the favourite temperature unit

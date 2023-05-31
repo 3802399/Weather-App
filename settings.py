@@ -1,6 +1,23 @@
 import json
 
 class Settings:
+    # these first few open_file methods are just to make sure the file exists and is valid
+    @staticmethod
+    def open_file():
+        file = open("settings", "r")
+        file.close()
+
+    @staticmethod
+    def open_file_check_json():
+        try:
+            file = open("settings", "r")
+        except FileNotFoundError:
+            return None
+
+        data = json.loads(file.read())
+
+        file.close()
+        
     # to make the rest of the methods in this class easier to write
     @staticmethod
     def get_data():

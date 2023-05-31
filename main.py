@@ -1,13 +1,36 @@
 import settings
 import gui
 import weather
+import sys
 
 class Main:
     def __init__(self):
-        preferred_display = settings.Settings.get_display_mode()
-
         self.api = 0
-        self.get_api()
+
+        # get API key if possible, exit if not
+        try:
+            self.get_api()
+        except FileNotFoundError:
+            print("Cannot find API key file. Exiting.")
+            sys.exit()
+
+        # make sure settings file exists
+        try:
+            settings.Settings.open_file()
+        except FileNotFoundError:
+            print("Cannot find settings file. Exiting.")
+            sys.exit()
+
+        # make sure if settings file exists, it is valid JSON
+        try:
+            settings.Settings.open_file_check_json()
+        except json.decoder.JSONDecodeError:
+            print("Settings file not valid JSON file. Exiting.")
+            sys.exit()
+
+        # after basic checks done, continue
+
+        preferred_display = settings.Settings.get_display_mode()
 
         if preferred_display == "gui":
             self.open_gui()
@@ -30,10 +53,7 @@ class Main:
 
     def get_api(self):
         # get api key from file
-        try:
-            file = open("api_key", "r")
-        except FileNotFoundError:
-            return
+        file = open("api_key", "r")
 
         self.api = file.read().strip()
 

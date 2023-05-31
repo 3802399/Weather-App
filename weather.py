@@ -4,6 +4,7 @@ import datetime
 import settings
 
 class Conversion:
+    # the conversion functions used in this file
     @staticmethod
     def f_to_c(f):
         return (f - 32) * (5/9)
@@ -26,7 +27,7 @@ class Conversion:
 
     @staticmethod
     def k_to_f(k):
-        return (9/5) * (K - 273.15) + 32
+        return (9/5) * (k - 273.15) + 32
 
     @staticmethod
     def ms_to_kmh(ms):
@@ -45,6 +46,7 @@ class Conversion:
 
 class Weather:
     def __init__(self, api):
+        # variables for weather
         self.api = api
         self.code = 0
         self.msg = ""
@@ -181,6 +183,7 @@ class Weather:
         srise = int(resp['sys']['sunrise'])
         srise = datetime.datetime.utcfromtimestamp(srise + tz).strftime('%H:%M:%S')
 
+        # the srise will be in format of H:M:S
         srise_hour = int(srise.split(":")[0])
         srise_min = srise.split(":")[1]
         srise_s = srise.split(":")[2]

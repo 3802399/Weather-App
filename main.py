@@ -90,7 +90,7 @@ class Main:
             # ask city from user to display weather for said city
             city = input("Enter city name: ")
             wthr.get_weather(city)
-            print(wthr.pretty_print)
+            print(wthr.pretty_print())
             print("------------------------------\n")
 
 if __name__ == "__main__":

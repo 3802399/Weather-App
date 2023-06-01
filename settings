@@ -3,7 +3,8 @@
     "fav_cities": [
         "Saskatoon",
         "Chicago",
-        "New York"
+        "New York",
+        "Lahore"
     ],
     "display": "gui",
     "display-color": "dark",

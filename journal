@@ -1,4 +1,4 @@
-Day 1 - May 3, 2023 (1 hr)
+Day 1 - May 3, 2023 (1 hr) 1 Hour completed
 
 15 min - Selecting a project idea (weather app)
 
@@ -12,27 +12,27 @@ Day 1 - May 3, 2023 (1 hr)
 5 min - program code to load API key
 25 min - program code to get weather data in class (OOP)
 
-Day 2 - May 5, 2023 (1 hr)
+Day 2 - May 5, 2023 (1 hr) 2 Hours completed
 
 5 min - write func to convert weather data to JSON to save locally if needed later on
 20 min - create simple text-user-interface for weather app (there were a few bug)
 10 min - create funcs to convert temps from and to kelvin, celsius, and fahrenheit (using @staticmethod)
 25 min - create a class for settings that will be saved in file (such as favourite cities)
 
-Day 3 - May 8, 2023 (1 hr)
+Day 3 - May 8, 2023 (1 hr) 3 Hours completed
 
 40 min - rewrite settings class to be in one single settings file (as opposed to one file for favourite cities, and one for favourite temperature unit)
 15 min - add a new settings python app/file to modify these settings
 5 min - seperate weather functions into different files
 
-Day 4 - May 9, 2023 (1 hr)
+Day 4 - May 9, 2023 (1 hr) 4 Hours completed
 
 5 min - convert weather to users favorite temperature unit
 35 min - overall improvements everywhere
 10 min - clean up code to make room for a GUI (make it easier to install)
 10 min - begin a GUI and set up a Treeview in Tkinter
 
-Day 5 - May 10, 2023 (1 hr)
+Day 5 - May 10, 2023 (1 hr) 5 Hours completed
 
 5 min - design full GUI layout
 5 min - begin implementation
@@ -40,18 +40,18 @@ Day 5 - May 10, 2023 (1 hr)
 30 min - create search and favourite buttons and implement text box to display weather information in
 10 min - begin implementation of a favourite button (partially done)
 
-Day 6 - May 11, 2023 (1/2 hr)
+Day 6 - May 11, 2023 (1/2 hr) 5.5 Hours completed
 
 15 min - finish basic GUI (not fully featured but runs)
 5 min - make the settings app change between CLI and GUI
 
-Day 7 - May 12, 2023 (1/2 hr)
+Day 7 - May 12, 2023 (1/2 hr) 6 Hours completed
 
 10 min - try to look for units for wind speed so I can add wind speed. going terribly
 10 min - gave up and instead increased font size and bolded main temperature in GUI and fixed fonts
 10 min - found out how to get wind data and conversion units
 
-Day 8 - May 15, 2023 (1 hr)
+Day 8 - May 15, 2023 (1 hr) 7 Hours completed
 
 15 min - try to find way to edit heart pictures (symbols won't work) to reasonable size - gave up
 15 min - implemented wind data and conversion units
@@ -59,7 +59,7 @@ Day 8 - May 15, 2023 (1 hr)
 15 min - make Treeview work again
 5 min - remove text validation from entrybox of city, so that we can remove all characters from it when search happens
 
-Day 9 - May 16, 2023 (1 hr)
+Day 9 - May 16, 2023 (1 hr) 8 Hours completed
 
 5 min - fix bug where GUI does not show proper favourite/unfavourite on unfavourited cities
 10 min - fix bug where only first word of a city name was being displayed (took a few Internet searches)
@@ -68,54 +68,54 @@ Day 9 - May 16, 2023 (1 hr)
 20 min - get local time of city
 5 min - show local time of last update in GUI and CLI
 
-Day 10 - May 17, 2023 (1 hr)
+Day 10 - May 17, 2023 (1 hr) 9 Hours completed
 
 25 min - get sunrise/sunset and display it (actually quite hard)
 5 min - bind enter/return key to city search box
 10 min - round approximate sunrise/sunset time one minute up if the second variable is 30 or bigger
 20 min - try to add image to a text box (apparently is IS possible) but fail so far
 
-Day 11 - May 18, 2023 (1 hr)
+Day 11 - May 18, 2023 (1 hr) 10 Hours completed
 
 5 min - fix city name favourite/unfavourite issue - ex, chicago is unfavourited but Chicago is favourited (fixed)
 55 min - finally succeed in making images appear (turns out the tk.PhotoImage I was using needed to be global in the class, not local in a function, which would delete the image
           the instant the function was over)
 
-Day 12 - May 19, 2023 (1 hr)
+Day 12 - May 19, 2023 (1 hr) 11 Hours completed
 
 30 min - add ttk themes
 20 min - kahoot quiz (I won by a large margin, so that was awesome)
 5 min - add weather icon to text widget instead of own label
 5 min - configure ttk themes to make it look better
 
-Day 13 - May 23, 2023 (1 hr)
+Day 13 - May 23, 2023 (1 hr) 12 Hours completed
 
 10 min - add a tkinter Frame around the weather box to show a border (otherwise it looks terrible)
 50 min - work on adding a Settings application as a GUI
           - added radiobuttons, but functionality isn't done yet
 
-Day 14 - May 24, 2023 (1 hr)
+Day 14 - May 24, 2023 (1 hr) 13 Hours completed
 
 40 min - rearrange code and split GUI code into several parts - two Frames (the main weather window, the settings frame) and the main window itself that will manage
           the frames (previously, it was no frames and two windows - main weather and settings)
 10 min - finish settings
 10 min - fix a few bugs of settings
 
-Day 15 - May 25, 2023 (1/2 hr)
+Day 15 - May 25, 2023 (1/2 hr) 13.5 Hours completed
 
 30 min - write code so the background changes with ttk theme changes (light -> dark and vice versa) - previously background did not change
 
-Day 16 - May 26, 2023 (1/2 hr)
+Day 16 - May 26, 2023 (1/2 hr) 14 Hours completed
 
 5 min - show seconds to local time last updated, sunrise, and sunset
 25 min - refactored settings code to be better and fix bugs
 
-Day 17 - May 29, 2023 (1 hr)
+Day 17 - May 29, 2023 (1 hr) 15 Hours completed
 
 20 min - get code reviewed by neighbour (determined by seating) and get no improvement ideas
 40 min - review code of partner and help them out
 
-Day 18 - May 29, 2023 (1 hr - continuation)
+Day 18 - May 29, 2023 (1 hr - continuation) 16 Hours completed
 
 30 min - change/add/delete code to make adding different data to GUI weather display easier
 10 min - rewrite code that gets wind direction to make it more modular and easier to understand
@@ -124,22 +124,31 @@ Day 18 - May 29, 2023 (1 hr - continuation)
           temp unit is K)
 15 min - look for module to open a map in a web browser to show location of city - so far no success
 
-Day 19 - May 30, 2023 (1 hr)
+Day 19 - May 30, 2023 (1 hr) 17 Hours completed
 
 30 min - add webbrowser module to open Google Maps of city
 30 min - add map using tkintermapview to app for choice
 
-Day 20 - May 30, 2023 (1 hr continued)
+Day 20 - May 30, 2023 (1 hr continued) 18 Hours completed
 
 20 min - add map to settings
 25 min - fix bugs of that (there were lots of minor ones)
 5 min - add button to go back from map frame
 10 min - add marker/pins to map view in app
 
-Day 21 - May 31, 2023 (1 hr)
+Day 21 - May 31, 2023 (1 hr) 19 Hours completed
 
 15 min - add expand to to frame.pack() so frame will go to center of available space in window
 5 min - add green color to Save button in settings frame, show user error if they try to access map when unavailable
 15 min - add checks to the beginning of the application to ensure that either the files exist and are valid, or we must exit
 15 min - add checks to make sure the themes we want to load are available (found out I was missing some files this way, actually)
 10 min - fix bugs relating to changing the favourite temperature unit
+
+Day 22 - June 1, 2023 (1 hr) 20 Hours completed
+
+10 min - add code to make sure when it's 12 PM it shows 12 PM instead of 12AM when its the afternoon or 0PM in afternoon
+15 min - add requirements.txt and finish README to show how to use project
+10 min - help neighbours out with stuff
+10 min - find small bugs and fix them
+5 min - add refresh button and automatically refresh city weather (if applicable) if temperature is changed
+10 min - test app functionality (both gui and cli) to make sure bug-free

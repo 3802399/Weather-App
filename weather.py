@@ -192,6 +192,9 @@ class Weather:
         if srise_hour > 12:
             srise_hour -= 12
             srise_hour_type = 1
+        elif srise_hour >= 12:
+            # this is to show 12:XX PM if its the afternoon instead of 12:XX AM
+            srise_hour_type = 1
 
         self.sunrise["hour"] = srise_hour
         self.sunrise["minute"] = srise_min
@@ -209,6 +212,9 @@ class Weather:
 
         if sset_hour > 12:
             sset_hour -= 12
+            sset_hour_type = 1
+        elif sset_hour >= 12:
+            # this is to show 12:XX PM if its the afternoon instead of 12:XX AM
             sset_hour_type = 1
 
         self.sunset["hour"] = sset_hour
@@ -235,6 +241,9 @@ class Weather:
         if hour > 12:
             hour -= 12
             hour_type = 1
+        elif hour >= 12:
+            # this is to show 12:XX PM if its the afternoon instead of 12:XX AM
+            hour_type = 1
 
         self.current_time["hour"] = hour
         self.current_time["minute"] = minute
@@ -248,6 +257,7 @@ class Weather:
     def pretty_print(self):
         if self.code == 200:
             return  \
+# get weather data in this format
                 f"""{self.city.upper()}, {self.country}
 
 {self.desc}

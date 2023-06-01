@@ -211,17 +211,21 @@ class WeatherWindow(tk.Frame):
         # add a button to open the map in a web browser
         self.browser_btn = ttk.Button(self, text="Open Map", command=self.open_map)
 
+        # add a button to refresh city
+        self.refresh_btn = ttk.Button(self, text="Refresh", command=self.refresh_city)
+
         # grid the widgets
-        self.tree.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
-        self.wthr_border.grid(row=1, column=3, columnspan=10, padx=5, pady=5, sticky='nsew')
-        self.enter_city_label.grid(row=2, column=3, padx=5, pady=5, sticky='nsew')
-        self.city_name.grid(row=2, column=4, padx=5, pady=5, sticky='nsew')
-        self.search_btn.grid(row=2, column=5, padx=5, pady=5, sticky='nsew')
-        self.fav_button.grid(row=2, column=12, padx=5, pady=5, sticky='nsew')
+        self.tree.grid(row=1, column=0, columnspan=3, padx=5, pady=5, sticky='nsew')
+        self.wthr_border.grid(row=1, column=4, columnspan=10, padx=5, pady=5, sticky='nsew')
+        self.enter_city_label.grid(row=2, column=4, padx=5, pady=5, sticky='nsew')
+        self.city_name.grid(row=2, column=5, padx=5, pady=5, sticky='nsew')
+        self.search_btn.grid(row=2, column=6, padx=5, pady=5, sticky='nsew')
+        self.fav_button.grid(row=2, column=13, padx=5, pady=5, sticky='nsew')
         self.settings_btn.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
         self.browser_btn.grid(row=2, column=1, padx=5, pady=5, sticky='nsew')
+        self.refresh_btn.grid(row=2, column=2, padx=5, pady=5, sticky='nsew')
 
-        self.tree_scroll.grid(row=1, column=2, sticky='ns')
+        self.tree_scroll.grid(row=1, column=3, sticky='ns')
 
     def open_map(self):
         current_city = self.wthr.city
@@ -267,6 +271,13 @@ class WeatherWindow(tk.Frame):
         city = self.city_name.get()
         self.search_city(city)
         self.city_name.delete(0, "end")
+
+    def refresh_city(self):
+        city = self.wthr.city
+
+        if city and city != "":
+            # refresh weather data about city
+            self.search_city(city)
 
     # instead of adding position numbers when adding text to the wthrbox, we can
     # add it here to make the code better and not have to reset the position numbers every time
@@ -414,6 +425,9 @@ class GUIMain(tk.Tk):
         settings.Settings.save_temp_unit(saved_settings["temp"])
         settings.Settings.save_display_mode(saved_settings["display"])
         settings.Settings.save_map(saved_settings["map"])
+
+        # refresh city in wthrbox
+        self.weather_frame.refresh_city()
         # we intentionally save color later - because if the color isn't available, then we should not save that color to settings
 
         # TODO: add verification to check if color changed or not, otherwise error will occur
@@ -451,6 +465,8 @@ class GUIMain(tk.Tk):
                 if color == "dark" and not just_loaded:
                     self.weather_frame.configure(background=self.bg_dark)
                     self.settings_frame.configure(background=self.bg_dark)
+                    self.map_frame.configure(background=self.bg_dark)
+                    self.configure(background=self.bg_dark)
 
                     # manually change the color of the weather box otherwise it will not change
                     self.weather_frame.wthrbox.configure(background=self.bg_dark)
@@ -458,6 +474,8 @@ class GUIMain(tk.Tk):
                 elif color == "light" and not just_loaded:
                     self.weather_frame.configure(background=self.bg_light)
                     self.settings_frame.configure(background=self.bg_light)
+                    self.map_frame.configure(background=self.bg_light)
+                    self.configure(background=self.bg_light)
 
                     self.weather_frame.wthrbox.configure(background=self.bg_light)
                     self.weather_frame.wthrbox.configure(foreground=self.fg_light)

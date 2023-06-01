@@ -17,7 +17,7 @@ class Settings:
         data = json.loads(file.read())
 
         file.close()
-        
+
     # to make the rest of the methods in this class easier to write
     @staticmethod
     def get_data():
@@ -200,6 +200,7 @@ class SettingsCLI:
 
         print()
 
+    # function to make the other functions easier to write
     def change_toggle(self, acceptable_inputs, input_str, param):
         print("-----------------------------\n")
 
@@ -214,6 +215,7 @@ class SettingsCLI:
 
         print()
 
+    # use above function to implement following 4 functions
     def change_display(self):
         self.change_toggle(["gui", "cli"], "Enter display input (gui, cli) or hit enter to continue: ", "display")
 

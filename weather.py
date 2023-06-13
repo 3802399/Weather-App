@@ -258,7 +258,7 @@ class Weather:
         if self.code == 200:
             return  \
 # get weather data in this format
-                f"""{self.city.upper()}, {self.country}
+            f"""{self.city.upper()}, {self.country}
 
 {self.desc}
 

@@ -256,9 +256,7 @@ class Weather:
 
     def pretty_print(self):
         if self.code == 200:
-            return  \
-# get weather data in this format
-            f"""{self.city.upper()}, {self.country}
+            return  f"""{self.city.upper()}, {self.country}
 
 {self.desc}
 

@@ -1,5 +1,5 @@
-# A10
-A10
+# Weather App
+This is a weather app.
 
 # To run
 Assuming all the files are there (the forest-theme folder contains two subfolders [forest-light, forest-dark], the icons file contains 10 files, this folder contains 4 Python files, two external files [api_key, settings]), then running it should be pretty simple.
